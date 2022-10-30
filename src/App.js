@@ -1,89 +1,30 @@
 import React from 'react';
-import { Collection } from './Collection'
-import './index.scss';
 
-const cats = [
-  { "name": "Все" },
-  { "name": "Море" },
-  { "name": "Горы" },
-  { "name": "Архитектура" },
-  { "name": "Города" }
-]
-
-
-// https://635d74d2ea764497f0dd237e.mockapi.io/Collections
 function App() {
-  const [categoryId, setCategoryId] = React.useState(0);
-  const [page, setPage] = React.useState(1);
-  const [isLoading, setIsLoading] = React.useState(true);
-  const [searchValue, setSearchValue] = React.useState('');
-  const [collections, setCollections] = React.useState([]);
+  const [number, setNumber] = React.useState([1, 2, 3, 5, 7, 9, 12, 345, 67, 456, 123, 34, 4, 4, 5, 6, 7, 8, 9]);
+  const [filterNumber, setFilterNumber] = React.useState();
 
-  React.useEffect(() => {
-    setIsLoading(true);
-    const category = categoryId ? `category=${categoryId}` : '';
-    fetch(`https://635d74d2ea764497f0dd237e.mockapi.io/Collections?page=${page}&limit=3${category}`)
-      .then((res) => res.json())
-      .then((json) => {
-        setCollections(json);
-        console.log(json)
-      })
-      .catch((err) => {
-        console.warn(err);
-        alert('Ошибка при получении даних');
-      })
-      .finally(() => setIsLoading(false))
-  }, [categoryId, page]);
+  const numberAdd = () => {
+    const n = Math.round((Math.random() * 1000).toFixed(3));
+    setNumber([...number, n]);
+  }
 
-
+  const filter = (value) => {
+    // debugger;
+    setFilterNumber(+value)
+  }
 
   return (
-    <div className="App">
-      <h1>Моя коллекция фотографий</h1>
-      <div className="top">
-        <ul className="tags">
-
-          {
-            cats.map((obj, i) => (
-              <li
-                className={categoryId === i ? 'active' : ''}
-                onClick={() => setCategoryId(i)}
-                key={obj.name}
-              > {obj.name} </li>
-            ))
-          }
-
-        </ul>
-        <input
-          value={searchValue}
-          className="search-input"
-          placeholder="Поиск по названию"
-          onChange={(e) => setSearchValue(e.target.value)}
-        />
-      </div>
-      <div className="content">
-        {isLoading ? (
-          <h2>Идет загрузка</h2>
-        ) : (
-          collections.filter((obj) => {
-            return obj.name.toLowerCase().includes(searchValue.toLowerCase())
-          })
-            .map((obj) => (
-              <Collection name={obj.name} images={obj.photos} />
-
-            ))
-        )}
-
-
-      </div>
-      <ul className="pagination">
+    <div className='App'>
+      <ul>
         {
-          [...Array(5)].map((_, i) => (
-            <li onClick={() => setPage(i + 1)} className={page === i + 1 ? 'active' : ''}>{i + 1}</li>
-          ))
+          number.filter((n) => filterNumber ? (n === filterNumber) : (true))
+            .map((n, i) => (
+              <li key={i}>{n}</li>
+            ))
         }
-
-
+        <button onClick={numberAdd}>Новое число</button>
+        <textarea onChange={(e) => filter(e.target.value)}></textarea>
       </ul>
     </div>
   );
