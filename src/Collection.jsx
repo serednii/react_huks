@@ -1,7 +1,7 @@
 import React from "react";
 
 export function Collection({ name, images }) {
-    debugger;
+    // debugger;
     return (
         <div className="collection">
             <img className="collection__big" src={images[0]} alt="Item" />
